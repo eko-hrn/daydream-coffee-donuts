@@ -2,6 +2,7 @@
 
 Aplikasi web pemesanan dan sistem manajemen pesanan berbasis **Laravel** untuk **Day Dream Donuts & Coffee**. Dilengkapi antarmuka pemesanan untuk pelanggan dan panel admin terintegrasi untuk mengelola transaksi, katalog menu, serta data pengguna.
 
+**Link Demo:** https://daydream-coffee-donuts-production.up.railway.app/
 ---
 
 ## Fitur Utama
