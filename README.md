@@ -3,9 +3,6 @@
 An online ordering web application and order management system built with **Laravel** for **Day Dream Donuts & Coffee**. It features a customer-facing interface for browsing and ordering, paired with an integrated admin dashboard to manage transactions, menu catalogs, and user accounts.
 
 **Live Demo:** https://daydream-coffee-donuts-production.up.railway.app/
--
-user : admin@gmail.com
-pw : admin123
 
 ---
 
