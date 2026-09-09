@@ -125,14 +125,12 @@
                                             </a>
 
                                             <form action="{{ route('admin.products.destroy', $product->id) }}"
-                                                method="POST"
+                                                method="POST" style="display: inline-block;"
                                                 onsubmit="return confirm('Yakin ingin menghapus product ini?')">
                                                 @csrf
                                                 @method('DELETE')
-
                                                 <button type="submit" class="btn btn-action btn-delete">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                    Hapus
+                                                    <i class="bi bi-trash-fill"></i> Hapus
                                                 </button>
                                             </form>
                                         </div>

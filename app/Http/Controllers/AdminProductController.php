@@ -83,13 +83,21 @@ class AdminProductController extends Controller
             ->with('success', 'Data produk berhasil ditambahkan.');
     }
 
-    public function show(Product $product)
+    public function show($id)
     {
         return redirect()->route('admin.products.index');
     }
 
-    public function edit(Product $product)
+    public function edit($id)
     {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('error', 'Data produk tidak ditemukan.');
+        }
+
         $categories = [
             'Donut',
             'Coffee',
@@ -102,8 +110,16 @@ class AdminProductController extends Controller
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('error', 'Data produk tidak ditemukan.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:150',
             'category' => 'required|string|max:100',
@@ -169,7 +185,13 @@ class AdminProductController extends Controller
 
     public function cetakPdfById($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('error', 'Data produk tidak ditemukan.');
+        }
 
         $pdf = Pdf::loadView('admin.products.pdf.detail', compact('product'))
             ->setPaper('a4', 'portrait');
@@ -177,8 +199,16 @@ class AdminProductController extends Controller
         return $pdf->stream('product-' . $product->id . '-' . Str::slug($product->name) . '.pdf');
     }
 
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('error', 'Data produk tidak ditemukan.');
+        }
+
         if ($product->image_url && File::exists(public_path('images/' . $product->image_url))) {
             File::delete(public_path('images/' . $product->image_url));
         }
