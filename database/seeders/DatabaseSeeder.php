@@ -16,13 +16,5 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProductSeeder::class,
         ]);
-
-        User::updateOrCreate(
-            ['email' => 'admin@gmail.com'],
-            [
-                'name' => 'Admin Day Dream',
-                'password' => Hash::make('admin123'),
-            ]
-        );
     }
 }
