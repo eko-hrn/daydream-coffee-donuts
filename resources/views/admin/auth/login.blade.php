@@ -185,6 +185,51 @@
             transform: translateY(-1px);
         }
 
+        /* --- STYLING TOMBOL GUEST DEMO --- */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 14px 0;
+            color: #b69483;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px dashed var(--jco-border);
+        }
+
+        .divider span {
+            padding: 0 10px;
+        }
+
+        .btn-guest {
+            width: 100%;
+            height: 42px;
+            border: 2px solid var(--jco-brown);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--jco-brown);
+            font-weight: 700;
+            font-size: 13px;
+            transition: 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-guest:hover {
+            background: var(--jco-brown);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
         .back-site {
             display: block;
             text-align: center;
@@ -235,7 +280,8 @@
             }
 
             .form-control,
-            .btn-login {
+            .btn-login,
+            .btn-guest {
                 height: 40px;
             }
 
@@ -255,7 +301,6 @@
     <div class="login-card">
 
         <div class="logo-area">
-
             <h1 class="login-title">Admin Login</h1>
             <p class="login-subtitle">
                 Day Dream Donuts & Coffee.
@@ -276,6 +321,7 @@
             </div>
         @endif
 
+        <!-- Form Login Standar -->
         <form action="{{ route('admin.login.submit') }}" method="POST">
             @csrf
 
@@ -311,9 +357,23 @@
                     </div>
                 @enderror
             </div>
+
             <button type="submit" class="btn btn-login">
                 <i class="bi bi-box-arrow-in-right me-1"></i>
                 Login to Dashboard
+            </button>
+        </form>
+
+        <!-- Divider 'Atau' -->
+        <div class="divider">
+            <span>atau</span>
+        </div>
+
+        <!-- Form Guest Demo Login (1-Click) -->
+        <form action="{{ route('admin.login.guest') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-guest">
+                Login as guest
             </button>
         </form>
 

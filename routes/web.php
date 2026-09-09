@@ -9,7 +9,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Middleware\DemoSessionDatabase;
 
+// --- ROUTE PUBLIC (Gunakan Database Utama MySQL) ---
 Route::get('/', function () {
     return view('pages.home');
 });
@@ -31,49 +33,55 @@ Route::get('/login', function () {
     return redirect()->route('admin.login');
 })->name('login');
 
-Route::prefix('admin')->name('admin.')->group(function () {
 
-    Route::middleware('guest')->group(function () {
-        Route::get('/login', [LoginController::class, 'showLoginForm'])
-            ->name('login');
+// --- ROUTE ADMIN & DEMO (Menggunakan SQLite Isolasi per Session) ---
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware([DemoSessionDatabase::class]) 
+    ->group(function () {
+        Route::middleware('guest')->group(function () {
+            Route::get('/login', [LoginController::class, 'showLoginForm'])
+                ->name('login');
 
-        Route::post('/login', [LoginController::class, 'login'])
-            ->name('login.submit');
+            Route::post('/login', [LoginController::class, 'login'])
+                ->name('login.submit');
+            
+            Route::post('/login-guest', [LoginController::class, 'loginGuest'])->name('login.guest');
+        });
+
+        Route::post('/logout', [LoginController::class, 'logout'])
+            ->middleware('auth')
+            ->name('logout');
+
+        Route::middleware('auth')->group(function () {
+
+            Route::get('/', function () {
+                return view('admin.home', [
+                    'totalProducts' => Product::count(),
+                    'totalUsers' => User::count(),
+                    'totalOrders' => Order::count(),
+                ]);
+            })->name('dashboard');
+
+            Route::get('/users', function () {
+                return view('admin.users.index');
+            })->name('users.index');
+
+            Route::get('/orders', [AdminOrderController::class, 'index'])
+                ->name('orders.index');
+
+            Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
+                ->name('orders.updateStatus');
+
+            Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])
+                ->name('orders.destroy');
+
+            Route::get('/products/cetak/pdf', [AdminProductController::class, 'cetakPdf'])
+                ->name('products.cetakPdf');
+
+            Route::get('/products/{id}/cetak/pdf', [AdminProductController::class, 'cetakPdfById'])
+                ->name('products.cetakPdfById');
+
+            Route::resource('products', AdminProductController::class);
+        });
     });
-
-    Route::post('/logout', [LoginController::class, 'logout'])
-        ->middleware('auth')
-        ->name('logout');
-
-    Route::middleware('auth')->group(function () {
-
-        Route::get('/', function () {
-            return view('admin.home', [
-                'totalProducts' => Product::count(),
-                'totalUsers' => User::count(),
-                'totalOrders' => Order::count(),
-            ]);
-        })->name('dashboard');
-
-        Route::get('/users', function () {
-            return view('admin.users.index');
-        })->name('users.index');
-
-        Route::get('/orders', [AdminOrderController::class, 'index'])
-            ->name('orders.index');
-
-        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
-            ->name('orders.updateStatus');
-
-        Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])
-            ->name('orders.destroy');
-
-        Route::get('/products/cetak/pdf', [AdminProductController::class, 'cetakPdf'])
-            ->name('products.cetakPdf');
-
-        Route::get('/products/{id}/cetak/pdf', [AdminProductController::class, 'cetakPdfById'])
-            ->name('products.cetakPdfById');
-
-        Route::resource('products', AdminProductController::class);
-    });
-});

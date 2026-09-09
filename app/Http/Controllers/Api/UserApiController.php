@@ -41,6 +41,14 @@ class UserApiController extends Controller
 
     public function store(Request $request)
     {
+        // Proteksi Mode Guest Demo
+        if (session('is_guest')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aksi ditolak: Mode Guest Demo tidak diizinkan menambah user!'
+            ], 403);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:150',
             'email' => 'required|email|max:150|unique:users,email',
@@ -70,6 +78,14 @@ class UserApiController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Proteksi Mode Guest Demo
+        if (session('is_guest')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aksi ditolak: Mode Guest Demo tidak diizinkan mengubah data user!'
+            ], 403);
+        }
+
         $user = User::find($id);
 
         if (!$user) {
@@ -117,6 +133,14 @@ class UserApiController extends Controller
 
     public function destroy($id)
     {
+        // Proteksi Mode Guest Demo
+        if (session('is_guest')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aksi ditolak: Mode Guest Demo tidak diizinkan menghapus user!'
+            ], 403);
+        }
+
         $user = User::find($id);
 
         if (!$user) {

@@ -43,6 +43,28 @@ class LoginController extends Controller
             ->onlyInput('email');
     }
 
+    // METHOD KHUSUS GUEST LOGIN DEMO 
+    public function loginGuest(Request $request)
+    {
+        $guestUser = User::first();
+
+        if ($guestUser) {
+            Auth::login($guestUser);
+            $request->session()->regenerate();
+
+            // Tandai session ini sebagai mode Guest
+            $request->session()->put('is_guest', true);
+
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('success', 'Masuk sebagai Mode Demo/Guest!');
+        }
+
+        return back()->withErrors([
+            'email' => 'Gagal masuk mode demo. Data user admin tidak ditemukan.',
+        ]);
+}
+
     public function logout(Request $request)
     {
         Auth::logout();

@@ -326,8 +326,8 @@
                     </div>
 
                     <div>
-                        <strong>{{ Auth::user()->name ?? 'Admin' }}</strong>
-                        <span>Website Manager</span>
+                        <strong>{{ session('is_guest') ? 'Guest Demo' : Auth::user()->name ?? 'Admin' }}</strong>
+                        <span>{{ session('is_guest') ? 'Demo Mode User' : 'Website Manager' }}</span>
                     </div>
 
                     <form action="{{ route('admin.logout') }}" method="POST" class="m-0 ms-2">

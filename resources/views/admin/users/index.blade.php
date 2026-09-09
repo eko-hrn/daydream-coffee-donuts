@@ -668,7 +668,13 @@
 
         function initDataTable() {
             if (window.jQuery && $.fn.DataTable) {
+                // Hancurkan instance lama jika tabel sudah pernah diinisialisasi
+                if ($.fn.DataTable.isDataTable('#tabel_user')) {
+                    $('#tabel_user').DataTable().destroy();
+                }
+
                 userDataTable = $('#tabel_user').DataTable({
+                    destroy: true, // Izinkan inisialisasi ulang
                     pageLength: 10,
                     lengthMenu: [5, 10, 25, 50],
                     autoWidth: false,
